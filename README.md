@@ -1,0 +1,97 @@
+# Ventas y publicidad — William Caro
+
+Aplicación de visualización en Streamlit, lista para ejecutar y desplegar. Se utiliza **un solo CSV**: `data/01_ventas_mensuales.csv` (24 meses, 2024–2025). Los datos son ficticios.
+
+## 1. Qué se desarrolló
+
+- Pregunta propuesta: ¿cómo evolucionan las ventas y la inversión publicitaria mes a mes?
+- Gráfica de líneas con dos series, etiquetas, unidades, leyenda y consulta interactiva de valores.
+- Título que comunica un hallazgo y cambia según el intervalo seleccionado.
+- Filtros por año y por intervalo de meses; vista en millones o índice (primer mes = 100).
+- Indicadores, interpretación, tabla y descarga de la selección.
+- Frase explícita de límite: los datos no permiten atribuir causalmente las ventas a la publicidad.
+
+La imagen proporcionada se utilizó como guía. No se recibió un README/RMarkdown original ni el PDF `datos_practica.pdf` mencionado en ella. Por eso la pregunta se propone a partir de las columnas del CSV; no se presenta como transcripción de una pregunta no recibida.
+
+## 2. ¿Notebook, RMarkdown o Python?
+
+La aplicación se escribe en **Python**, en `app.py`. No necesita Jupyter ni RStudio. Streamlit ejecuta ese script y muestra la interfaz en el navegador. `README.Rmd` documenta el desarrollo y se puede abrir en RStudio; no ejecuta ni publica la aplicación. Un HTML generado desde RMarkdown tampoco sustituye el servidor de Streamlit.
+
+## 3. Archivos
+
+| Archivo | Función |
+|---|---|
+| `app.py` | Aplicación y cálculos comentados |
+| `data/01_ventas_mensuales.csv` | Única base de datos del proyecto |
+| `requirements.txt` | Versiones de las librerías usadas |
+| `.streamlit/config.toml` | Tema visual |
+| `README.md` | Instrucciones |
+| `README.Rmd` | Explicación editable en RStudio |
+| `INICIAR_WINDOWS.bat` | Instalación y arranque local en Windows |
+| `VERIFICACION.md` | Comprobaciones realizadas |
+
+## 4. Ejecutar en Windows
+
+Instalar Python **3.12** desde https://www.python.org/downloads/ y habilitar su incorporación a PATH. Extraer el RAR antes de ejecutar. Se requiere conexión a internet para instalar las librerías.
+
+Opción rápida: doble clic en `INICIAR_WINDOWS.bat`. La primera ejecución crea un entorno e instala las dependencias. Mantener abierta la ventana mientras se usa la aplicación.
+
+Opción manual: abrir PowerShell en la carpeta que contiene `app.py` y ejecutar, una línea a la vez:
+
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run app.py
+```
+
+Abrir http://localhost:8501 si el navegador no aparece automáticamente. Esta dirección solo funciona en el equipo local. Para detener: `Ctrl+C` en la terminal.
+
+En macOS/Linux, con Python 3.12 instalado:
+
+```bash
+python3.12 -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m streamlit run app.py
+```
+
+## 5. Publicar para compartir por enlace
+
+**Plataforma propuesta: Streamlit Community Cloud**, gratuita y conectada a GitHub. No es necesario mantener encendido el computador personal una vez desplegada la aplicación.
+
+1. Crear una cuenta en https://github.com si no se tiene.
+2. Crear un repositorio llamado, por ejemplo, `streamlit-ventas-william-caro`. Para este ejercicio con datos ficticios, se puede elegir **Public**.
+3. En GitHub seleccionar **Add file → Upload files**. Subir el contenido de la carpeta extraída, de modo que `app.py` y `requirements.txt` estén directamente en la raíz del repositorio. Conservar `data/` y su CSV. No subir el RAR ni la carpeta `.venv`.
+4. Comprobar en GitHub que existan `app.py`, `requirements.txt` y `data/01_ventas_mensuales.csv`. Si `.streamlit/` no se incluyó al arrastrar, crear `.streamlit/config.toml` con **Add file → Create new file** y copiar su contenido. El tema es opcional; los tres archivos anteriores son indispensables.
+5. Entrar en https://share.streamlit.io/ y conectar la cuenta de GitHub.
+6. Pulsar **Create app** y, si se pregunta, **Yup, I have an app**.
+7. Elegir el repositorio, la rama `main` y **Main file path: `app.py`**. Si se subió una carpeta contenedora, usar su ruta completa en este campo; se recomienda subir el contenido directamente para simplificar.
+8. En **Advanced settings**, seleccionar **Python 3.12**. Esta aplicación no utiliza claves ni secretos.
+9. Elegir un subdominio disponible, si se desea, y pulsar **Deploy**.
+10. Al terminar, copiar el enlace `https://<subdominio>.streamlit.app`. Este es el enlace que se entrega al profesor. La dirección es ilustrativa: el enlace real solo existe después de desplegar.
+11. Revisar la opción de compartir de la aplicación y permitir acceso público si es necesario. Abrir el enlace en una ventana privada para confirmar que el profesor puede verlo sin una invitación.
+
+**GitHub almacena el código; Streamlit Community Cloud ejecuta la aplicación.** No seleccionar GitHub Pages: una aplicación Streamlit necesita un proceso Python. Los cambios guardados en GitHub se reflejan en el despliegue de Community Cloud.
+
+No se ha publicado desde este paquete ni se ha creado un enlace público; estos pasos se realizan desde las cuentas del propietario.
+
+## 6. Cálculos y lectura responsable
+
+La variación entre extremos es `(valor final / valor inicial - 1) × 100`. El índice es `valor mensual / valor del primer mes seleccionado × 100`. Los indicadores acumulados suman únicamente los meses seleccionados.
+
+En el periodo completo las ventas pasan de 95.0 a 173.0 millones (**+82.1%**), mientras la publicidad pasa de 21.7 a 25.1 millones (**+15.7%**). Son cambios entre enero de 2024 y diciembre de 2025, no crecimientos interanuales ni pruebas de efecto publicitario. No se especifica una moneda que el CSV no aporta.
+
+Se evita un doble eje vertical. En valores monetarios, ambas series tienen la misma escala; en índice, ambas parten de 100 para comparar cambios relativos. La vista indexada no representa importes.
+
+## 7. Problemas frecuentes
+
+- **No se reconoce Python:** instalar Python 3.12 y reiniciar la terminal; comprobar `py -3.12 --version`.
+- **No encuentra el CSV:** comprobar que se conservó `data/01_ventas_mensuales.csv`, con el mismo nombre y mayúsculas/minúsculas.
+- **ModuleNotFoundError:** ejecutar la instalación de `requirements.txt` con el mismo Python que inicia Streamlit.
+- **Falla en Community Cloud:** revisar los logs, la ruta de `app.py`, la versión Python y los archivos subidos al repositorio.
+- **La URL local no abre en otro equipo:** publicar en Community Cloud; `localhost` no es un enlace público.
+
+## 8. Documentación oficial consultada
+
+- https://docs.streamlit.io/deploy/streamlit-community-cloud
+- https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/deploy
+- https://docs.streamlit.io/deploy/streamlit-community-cloud/deploy-your-app/app-dependencies
